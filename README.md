@@ -6,20 +6,11 @@ of swarm.
 
 ## Run ClusterControl image with SSH Port
 
-To this case, the port host:5000 show the SSL interface of Cluster Control (CC).
-
-```
-docker run -d \
-	--name cc \
-	-p 5000:443 \
-	severalnines/clustercontrol
-```
-
 To permit the Cluster Control connect with others containers, we need to get the public
 key, and include in authorized_keys file. To get the public key of Cloud Control, use:
 
 ```
-docker exec -it cc bash
+docker exec -it cluster_control_container bash
 cat /root/.ssh/id_rsa.pub
 ```
 Copy the content, and put in 'authorized_keys' file.
@@ -40,10 +31,11 @@ configure the SSH.
 Before run the node, is needed to map the SSH port, to allow connections
 with SSH. In this case, the SSH is mapping in port 7000. All containers
 must have SSH configured in the same PORT, becauses Cluster Control
-apply the same configuration to connect for each node. 
+apply the same configuration to connect for each node. The port 35000
+is used to permit connection with the DATABASE SERVICE. 
 
 ```
-docker run -itd -p 7000:22 --name node_cc node bash
+docker run -itd -p 7000:22 -p 35000:35000 --name node_cc node bash
 ```
 
 The next step is create the certificates, and change the root password of each
